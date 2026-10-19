@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест к аккредитации ИС</title>
+    <style>
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-tertiary: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #eab308;
+            --border: #404040;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            margin: 0;
+            padding: 0;
+            color: var(--text-primary);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: var(--bg-secondary);
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        .header-title { text-align: center; margin-bottom: 30px; }
+        .header-title h1 { margin: 0; color: var(--primary); }
+        .header-title h2 { margin: 10px 0 0; color: var(--text-secondary); font-size: 1.5em; }
+        
+        /* Start Screen */
+        #start-screen {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--text-primary); }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .form-group input:focus { outline: 2px solid var(--primary); border-color: transparent; }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: bold;
+        }
+        .btn-primary { background: var(--primary); color: white; width: 100%; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-sound { background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border); margin-bottom: 20px; width: 100%; }
+        .btn-sound:hover { background: var(--border); }
+        
+        /* Sticky Header & Footer */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+            padding: 15px 20px;
+            border-bottom: 2px solid var(--primary);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .sticky-footer {
+            position: sticky;
+            bottom: 0;
+            background: var(--bg-secondary);
+            padding: 15px 20px;
+            border-top: 2px solid var(--danger);
+            z-index: 100;
+            text-align: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+        }
+        .btn-finish { background: var(--danger); color: white; font-size: 18px; padding: 15px 40px; }
+        .btn-finish:hover { background: #dc2626; }
+
+        /* Blocks */
+        .block-header {
+            margin: 40px 0 20px;
+            padding: 15px 20px;
+            background: var(--bg-tertiary);
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+        }
+        .block-header h2 {
+            margin: 0;
+            color: var(--primary);
+            font-size: 1.3em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Questions */
+        .question-block {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+        }
+        .question-text { font-size: 1.1em; font-weight: 600; margin-bottom: 15px; color: var(--text-primary); }
+        .options-list { list-style: none; padding: 0; }
+        .options-list li { margin-bottom: 10px; }
+        .options-list label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 5px;
+            transition: background 0.2s;
+            border: 1px solid transparent;
+        }
+        .options-list label:hover { background: var(--bg-primary); border-color: var(--border); }
+        .options-list input { margin-right: 12px; transform: scale(1.2); accent-color: var(--primary); }
+        
+        .matching-row, .ordering-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .matching-row span, .ordering-row span { min-width: 200px; font-weight: 500; }
+        .matching-row select, .ordering-row select, textarea {
+            padding: 10px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 15px;
+            flex: 1;
+            min-width: 250px;
+        }
+        .matching-row select:focus, .ordering-row select:focus, textarea:focus {
+            outline: 2px solid var(--primary);
+            border-color: transparent;
+        }
+        textarea {
+            width: 100%;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Images */
+        .question-images {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+        .image-container {
+            text-align: center;
+            max-width: 100%;
+        }
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 10px;
+        }
+        .image-caption {
+            font-size: 0.95em;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 8px;
+        }
+
+        /* Results Screen */
+        #result-screen { display: none; text-align: center; padding-top: 20px; }
+        .result-sticky-container {
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+            z-index: 50;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .result-name {
+            font-size: 5em;
+            color: var(--danger);
+            text-transform: uppercase;
+            font-weight: 900;
+            margin: 0;
+            line-height: 1;
+        }
+        .result-score {
+            font-size: 3em;
+            font-weight: 900;
+            margin: 20px 0;
+            line-height: 1.2;
+            color: var(--primary);
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: var(--bg-tertiary);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: 1px solid var(--border);
+        }
+        
+        /* Tables for Errors and High Difficulty */
+        .results-table {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto 30px;
+            border-collapse: collapse;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .results-table th, .results-table td {
+            border: 1px solid var(--border);
+            padding: 12px;
+            text-align: left;
+            color: var(--text-primary);
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            vertical-align: top;
+        }
+        .results-table th {
+            background: var(--bg-primary);
+            color: var(--primary);
+            font-weight: bold;
+        }
+        .answer-wrong {
+            color: var(--danger);
+            font-weight: 600;
+        }
+        .answer-correct {
+            color: var(--success);
+            font-weight: 600;
+        }
+        .high-diff-section {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border: 1px solid var(--warning);
+            text-align: left;
+        }
+        .high-diff-section h3 {
+            color: var(--warning);
+            margin-top: 0;
+            text-align: center;
+        }
+
+        /* Anti-Cheat UI */
+        #violation-counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--danger);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+        }
+        .pulse { animation: pulse-animation 1s infinite; }
+        @keyframes pulse-animation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 12px 24px;
+            border-radius: 5px;
+            z-index: 1001;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        
+        #violation-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: var(--bg-secondary);
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 500px;
+            border: 1px solid var(--border);
+        }
+        .modal-content h2 { color: var(--danger); }
+        .modal-content p { color: var(--text-primary); }
+
+        option { background: var(--bg-secondary); color: var(--text-primary); }
+    </style>
+</head>
+<body>
+
+<div id="violation-counter">Нарушений: <span id="violation-count">0</span></div>
+<div id="toast" class="toast"></div>
+
+<div id="violation-modal">
+    <div class="modal-content">
+        <h2>⚠️ ВНИМАНИЕ!</h2>
+        <p>Зафиксирован уход с вкладки тестирования. Это считается нарушением правил сдачи.</p>
+        <p>При повторном нарушении тест будет автоматически завершен с аннулированием результата.</p>
+        <button class="btn btn-primary" type="button" onclick="closeViolationModal()">Я понял, продолжить тест</button>
+    </div>
+</div>
+
+<div class="container">
+    <div id="start-screen">
+        <div class="header-title">
+            <h1>Тест к аккредитации ИС</h1>
+            <h2>40 вопросов</h2>
+        </div>
+        <button class="btn btn-sound" type="button" onclick="testSound()">🔊 Проверить звук</button>
+        <div class="form-group">
+            <label>Фамилия Имя Отчество</label>
+            <input type="text" id="student-name" required placeholder="Иванов Иван Иванович">
+        </div>
+        <div class="form-group">
+            <label>Группа</label>
+            <input type="text" id="student-group" value="ИС-23/9-П" required>
+        </div>
+        <button class="btn btn-primary" type="button" onclick="startTest()">Начать тестирование</button>
+    </div>
+
+    <div id="test-screen" style="display: none;">
+        <div class="sticky-header">
+            <div><strong>Студент:</strong> <span id="display-name"></span> | <strong>Группа:</strong> <span id="display-group"></span></div>
+            <div><strong>Время:</strong> <span id="timer">00:00</span></div>
+        </div>
+        
+        <form id="test-form"></form>
+        
+        <div class="sticky-footer">
+            <button class="btn btn-finish" type="button" onclick="submitTest()">Завершить тест</button>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <div class="result-sticky-container">
+            <h1 class="result-name" id="res-name"></h1>
+            <div class="result-score" id="res-score"></div>
+        </div>
+        <div class="stats-bar">
+            <div>Процент: <span id="res-percent"></span>%</div>
+            <div>Время: <span id="res-time"></span></div>
+        </div>
+        
+        <div id="res-high-diff" class="high-diff-section" style="display: none;"></div>
+        <div id="res-errors-container"></div>
+    </div>
+</div>
+
+<script>
+    // --- КОНФИГУРАЦИЯ ---
+    const SERVER_URL = 'save_result.php';
+    // === ИСПРАВЛЕНО: фиксированный уникальный ID (test1.html иначе давал бы ID=1 и сливался с test.html) ===
+    const TEST_ID = 2;
+    const h1 = document.querySelector('.header-title h1')?.textContent || '';
+    const h2 = document.querySelector('.header-title h2')?.textContent || '';
+    const TEST_NAME = (h1 + ': ' + h2).trim();
+
+    // --- БАНК ВОПРОСОВ (40 шт) ---
+    const questionsDB = {
+        basic: [
+            { id: 1, type: 'radio', text: "Наличие обратных связей между этапами жизненного цикла, определяющих возможность проведения проверок и корректировок проектируемого ПС на каждой стадии разработки, является основной особенностью ...", options: {a: "каскадной модели жизненного цикла", b: "итерационной модели жизненного цикла", c: "спиральной модели жизненного цикла ПО", d: "модели жизненного цикла UML"}, correct: ['c'] },
+            { id: 2, type: 'radio', text: "Выявлением и устранением ошибок только на стадии тестирования, которая может растянуться во времени или вообще никогда не завершиться, характеризуется ...", options: {a: "каскадной модели жизненного цикла", b: "итерационной модели жизненного цикла", c: "спиральной модели жизненного цикла ПО", d: "модели жизненного цикла UML"}, correct: ['a'] },
+            { id: 3, type: 'radio', text: "Процесс, в ходе которого один объект может приобретать свойства другого, называется...", options: {a: "наследование", b: "инкапсуляция", c: "полиморфизм", d: "абстракция"}, correct: ['a'] },
+            { id: 4, type: 'radio', text: "Процесс перегрузки функций и операторов реализует принцип ...", options: {a: "наследования", b: "инкапсуляции", c: "статического полиморфизма", d: "динамического полиморфизма"}, correct: ['c'] },
+            { id: 5, type: 'radio', text: "Какие задачи у модульного тестирования?", options: {a: "выявление локальных ошибок реализации алгоритмов модулей", b: "выявление ошибок при вызове модулей", c: "выявление ошибок взаимодействия модуля с окружением", d: "проверка соответствия программного продукта требованиям заказчика"}, correct: ['a'] },
+            { id: 6, type: 'radio', text: "Каковы особенности регрессионного тестирования?", options: {a: "регрессионное тестирование является подмножеством системного тестирования", b: "выбор между полным и частичным перетестированием и пополнением тестовых наборов", c: "перетестирование предусматривает только контроль частей приложения, связанных с изменениями", d: "оценка производительности системы при различных уровнях нагрузки"}, correct: ['b'] },
+            { id: 7, type: 'radio', text: "Подробная информация о приложении содержится в файле:", options: {a: "AndroidManifest.xml", b: "main.xml", c: "R.java", d: "default.properties"}, correct: ['a'] },
+            { id: 8, type: 'radio', text: "Тип верстки, при котором позиционирование элементов происходит относительно друг друга и относительно главного контейнера", options: {a: "AbsoluteLayout", b: "FrameLayout", c: "LinearLayout", d: "RelativeLayout"}, correct: ['d'] },
+            { id: 9, type: 'radio', text: "Понятие класса в ООП включает в себя", options: {a: "Поля и методы класса", b: "Процедуры и функции обработки", c: "Поля и функции обработки", d: "Поля и процедуры обработки"}, correct: ['a'] },
+            { id: 10, type: 'radio', text: "Интегрированная система программирования включает компонент для перевода исходного текста программы в машинный код, который называется", options: {a: "построителем кода", b: "компилятор", c: "переводчиком", d: "преобразователем"}, correct: ['b'] },
+            { id: 11, type: 'radio', text: "При выявлении требований моделируется интерфейс пользователя приложения без учета логики обработки в…", options: {a: "горизонтальном прототипе", b: "вертикальном прототипе", c: "одноразовом прототипе", d: "эволюционном прототипе"}, correct: ['a'] },
+            { id: 12, type: 'radio', text: "При выявлении требований быстрое макетирование компонентов системы выполняется с помощью…", options: {a: "горизонтального прототипа", b: "исследовательского прототипа", c: "вертикального прототипа", d: "эволюционного прототипа"}, correct: ['c'] },
+            { id: 13, type: 'radio', text: "Какой протокол используется для безопасной передачи данных в Интернете?", options: {a: "HTTP", b: "FTP", c: "SSH", d: "HTTPS"}, correct: ['d'] },
+            { id: 14, type: 'radio', text: "Какая команда используется для проверки доступности узла в сети?", options: {a: "tracert", b: "ping", c: "netstat", d: "ssh"}, correct: ['b'] },
+            { id: 15, type: 'radio', text: "Какое из приведенных определений наиболее точно характеризует понятие \"надёжность\" компьютерной системы?", options: {a: "Свойство системы выполнять заданные функции, сохраняя значения установленных эксплуатационных показателей в течение требуемого периода времени", b: "Способность системы работать без перерывов и остановок", c: "Отсутствие каких-либо сбоев и ошибок в работе системы", d: "Соответствие системы всем требованиям нормативно-технической документации"}, correct: ['a'] },
+            { id: 16, type: 'radio', text: "Какое определение наиболее точно описывает понятие \"исправность\" компьютерной системы?", options: {a: "Состояние системы, при котором она соответствует всем требованиям, установленным в нормативно-технической документации", b: "Состояние системы, при котором она может выполнять основные функции, но с ограничениями", c: "Состояние системы, при котором её использование является безопасным для пользователей", d: "Состояние системы, при котором все её компоненты работают в штатном режиме"}, correct: ['a'] },
+            { id: 17, type: 'radio', text: "Совокупность специальным образом организованных данных, хранимых в памяти вычислительной системы и отображающих состояние объектов и их взаимосвязей в рассматриваемой предметной области – это", options: {a: "База данных", b: "СУБД", c: "Словарь данных", d: "Информационная система"}, correct: ['a'] },
+            { id: 18, type: 'radio', text: "Комплекс языковых и программных средств, предназначенный для создания, ведения и совместного использования БД многими пользователями – это", options: {a: "База данных", b: "СУБД", c: "Словарь данных", d: "Информационная система"}, correct: ['b'] },
+            { id: 19, type: 'radio', text: "Наиболее используемая модель данных", options: {a: "Реляционная модель", b: "Сетевая модель данных", c: "Иерархическая модель данных", d: "Системы инвертированных списков"}, correct: ['a'] },
+            { id: 20, type: 'radio', text: "Проектированием БД занимается", options: {a: "Пользователь БД", b: "Проектировщик БД", c: "Администратор БД", d: "Программист БД"}, correct: ['b'] }
+        ],
+        advanced: [
+            { id: 21, type: 'checkbox', text: "Что характерно для событийно-управляемого программирования?", options: {a: "Реакция программы на действия пользователя", b: "Обработчики событий", c: "Асинхронная обработка событий", d: "Отсутствие любых событий", e: "Только линейное выполнение кода"}, correct: ['a', 'b', 'c'] },
+            { id: 22, type: 'checkbox', text: "Какие конструкции относятся к циклам в большинстве языков программирования?", options: {a: "for", b: "case", c: "while", d: "if", e: "switch"}, correct: ['a', 'c'] },
+            { id: 23, type: 'matching', text: "Установите соответствие между типами тестирования и их описанием:", items: [{id: "1", text: "Модульное тестирование"}, {id: "2", text: "Интеграционное тестирование"}, {id: "3", text: "Системное тестирование"}, {id: "4", text: "Приёмочное тестирование"}], targets: [{id: "А", text: "Проверка отдельных модулей программы в изоляции"}, {id: "Б", text: "Проверка взаимодействия между отдельными компонентами системы"}, {id: "В", text: "Проверка работы всей системы в целом на соответствие требованиям"}, {id: "Г", text: "Проверка соответствия системы ожиданиям заказчика"}], correct: {"1": "А", "2": "Б", "3": "В", "4": "Г"} },
+            { id: 24, type: 'matching', text: "Вставьте пропущенные слова в определение: «Тестирование программного обеспечения — это процесс _____ (1) и _____ (2) дефектов в программном продукте путём выполнения специальных _____ (3) на различных этапах разработки и поддержки программного обеспечения».", items: [{id: "1", text: "пропуск (1)"}, {id: "2", text: "пропуск (2)"}, {id: "3", text: "пропуск (3)"}], targets: [{id: "А", text: "обнаружения"}, {id: "Б", text: "исправления"}, {id: "В", text: "проверки"}, {id: "Г", text: "тестовых сценариев"}, {id: "Д", text: "программных модулей"}], correct: {"1": "А", "2": "В", "3": "Г"} },
+            { id: 25, type: 'matching', text: "Установите соответствие между компонентами Android и их назначением:", items: [{id: "1", text: "Activity"}, {id: "2", text: "Service"}, {id: "3", text: "Broadcast Receiver"}, {id: "4", text: "Content Provider"}], targets: [{id: "А", text: "Отображение пользовательского интерфейса"}, {id: "Б", text: "Обработка фоновых операций"}, {id: "В", text: "Обработка системных сообщений и событий"}, {id: "Г", text: "Предоставление доступа к данным другим приложениям"}], correct: {"1": "А", "2": "Б", "3": "В", "4": "Г"} },
+            { id: 26, type: 'matching', text: "Соотнесите паттерны проектирования с их характеристиками:", items: [{id: "1", text: "MVP"}, {id: "2", text: "MVVM"}, {id: "3", text: "MVC"}, {id: "4", text: "Repository"}], targets: [{id: "А", text: "Разделение на Модель, Вид и ViewModel с использованием данных"}, {id: "Б", text: "Архитектура с презентатором, обрабатывающим логику"}, {id: "В", text: "Шаблон для работы с данными и их хранения"}, {id: "Г", text: "Классическая архитектура с контроллером"}], correct: {"1": "Б", "2": "А", "3": "Г", "4": "В"} },
+            { id: 27, type: 'text', text: "Дайте определение системному программированию", correct: [], fullAnswer: "Системное программирование — это процесс разработки программного обеспечения, которое взаимодействует с аппаратным обеспечением и операционной системой на низком уровне." },
+            { id: 28, type: 'text', text: "Чем отличаются процессы и потоки?", correct: [], fullAnswer: "Процесс — это изолированный экземпляр выполняющейся программы со своим адресным пространством и ресурсами, обеспечивающий надёжную защиту и независимость от других процессов поток — это более легковесная единица выполнения внутри процесса, которая разделяет с другими потоками того же процесса память и ресурсы, но имеет собственный стек и регистры." },
+            { id: 29, type: 'text', text: "В чем отличие тестирования белым ящиком и черным ящиком?", correct: [], fullAnswer: "В чёрном ящике тестировщик не имеет доступа к коду и проверяет внешнее поведение системы на соответствие требованиям, тогда как при белом ящике есть полный доступ к исходному коду и внутренней логике, что позволяет детально проверять пути выполнения и покрытие." },
+            { id: 30, type: 'text', text: "Основные этапы проектирования баз данных", correct: [], fullAnswer: "Концептуальное проектирование, Логическое проектирование, Физическое проектирование, Нормализация" },
+            { id: 31, type: 'ordering', text: "В каком порядке выполняется процесс разработки программного обеспечения в водопадной (каскадной) модели?", options: ["Кодирование", "Внедрение", "Тестирование", "Проектирование", "Анализ требований", "Эксплуатация"], correct: ["Анализ требований", "Проектирование", "Кодирование", "Тестирование", "Внедрение", "Эксплуатация"] },
+            { id: 32, type: 'ordering', text: "Установите правильную последовательность этапов загрузки операционной системы", options: ["Загрузка ядра операционной системы", "включение компьютера/перезагрузка", "Пользовательский сеанс", "Master Boot Record", "BIOS / BootMonitor"], correct: ["включение компьютера/перезагрузка", "BIOS / BootMonitor", "Master Boot Record", "Загрузка ядра операционной системы", "Пользовательский сеанс"] },
+            { id: 33, type: 'matching', text: "Сопоставление операторов SQL и их функций", items: [{id: "1", text: "SELECT"}, {id: "2", text: "INSERT"}, {id: "3", text: "UPDATE"}, {id: "4", text: "DELETE"}, {id: "5", text: "CREATE"}], targets: [{id: "А", text: "Добавление новых записей"}, {id: "Б", text: "Изменение существующих записей"}, {id: "В", text: "Удаление записей"}, {id: "Г", text: "Выбор данных"}, {id: "Д", text: "Создание объектов БД"}], correct: {"1": "Г", "2": "А", "3": "Б", "4": "В", "5": "Д"} },
+            { id: 34, type: 'matching', text: "Сопоставление нормальных форм и их характеристик", items: [{id: "1", text: "1НФ"}, {id: "2", text: "2НФ"}, {id: "3", text: "3НФ"}, {id: "4", text: "BCNF"}], targets: [{id: "А", text: "Отсутствие транзитивных зависимостей"}, {id: "Б", text: "Отсутствие частичных зависимостей"}, {id: "В", text: "Все атрибуты атомарны"}, {id: "Г", text: "Все функциональные зависимости тривиальны"}], correct: {"1": "В", "2": "Б", "3": "А", "4": "Г"} }
+        ],
+        high: [
+            { id: 35, type: 'text', text: "В техподдержку поступила заявка: «Я нажал кнопку \"Экспорт в Excel\", программа зависла намертво, мои данные пропали». Версия ПО указана как v.2.4.1. Вы открываете программу на своем компьютере, нажимаете ту же кнопку — всё работает идеально.\n\nЗадание: сформировать список вопросов пользователю, собрать необходимые данные и определить, где искать", correct: [], fullAnswer: "Вопросы: какие именно данные были в таблице? Это новый файл или старый? Какое имя файла при сохранении вводил пользователь? Есть ли спецсимволы в пути сохранения?\nСбор данных: версия Windows/ macOS, права доступа пользователя, региональная раскладка клавиатуры, свободная оперативная память.\nАнализ серверной части: просмотр лог-файлов приложения за время обращения пользователя (поиск стек-трейса StackTrace или записи FATAL/ERROR) и проверка системного журнала событий (Event Viewer)." },
+            { id: 36, type: 'text', text: "В техподдержку позвонил пользователь. Он говорит: «Я открываю список товаров, жму кнопку \"Найти\", и программа просто замирает. Курсор крутится, ничего не происходит. Помогает только перезагрузка компьютера». Вы пробуете сделать то же самое на своем рабочем месте — поиск занимает 1 секунду и работает идеально.\n\nЗадание: какие вопросы нужно задать пользователю, что нужно попросить сделать и где искать информацию об ошибки.", correct: [], fullAnswer: "Первый вопрос: «Эта ошибка возникает каждый раз при поиске любого товара или только сегодня/только с этим словом?»\nВопросы про данные: Длинное ли слово «хлеб»? Есть ли там лишние пробелы в начале? Не включена ли клавиша Caps Lock? Поиск чувствителен к регистру?\nПопросить пользователя снять все фильтры (галочки) и попробовать найти товар снова. Скорее всего, фильтр настроен так узко, что в базе просто нет подходящих товаров, и программа долго перебирает пустоту.\nВ файле логов приложения. Там будет записана техническая ошибка, которая произошла ровно в ту секунду, когда пользователь нажал кнопку." },
+            { id: 37, type: 'text', text: "Дана программа для расчета факториала числа. Распишите каждый шаг цикла и напишите ответ.", images: [{src: "test1-img/01.png", caption: "Программа для расчета факториала"}], correct: [], fullAnswer: "5! = 120\nЗначение i | Вычисление | Значение factorial\n1 | 1*1 | 1\n2 | 1*2 | 2\n3 | 2*3 | 6\n4 | 6*4 | 24\n5 | 24*5 | 120" },
+            { id: 38, type: 'text', text: "Дана программа для расчета суммы квадратов чисел. Распишите каждый шаг цикла и напише ответ", images: [{src: "test1-img/02.png", caption: "Программа для расчета суммы квадратов"}], correct: [], fullAnswer: "Сумма чётных чисел до 5 = 55\nЗначение i | Вычисление | Значение sumSquares\n1 | 0+1*1 | 1\n2 | 1+2*2 | 5\n3 | 5+3*3 | 14\n4 | 14+4*4 | 30\n5 | 30+5*5 | 55" },
+            { id: 39, type: 'text', text: "Напишите на языке запросов SQL, запрос к таблице Рисунок 1 – Таблица «Товары», чтоб получить следующий результат Рисунок 2 – Запрос «Цена».", images: [{src: "test1-img/03.png", caption: "Рисунок 1 – Таблица «Товары»"}, {src: "test1-img/04.png", caption: "Рисунок 2 – Запрос «Цена»"}], correct: [], fullAnswer: "SELECT НаимТовара AS [Наименование товара], Цена1 AS [Цена закупочная]\nFROM Товары\nWHERE Цена1 >50 AND Цена1 <200;" },
+            { id: 40, type: 'text', text: "Напишите на языке запросов SQL, запрос к таблице Рисунок 1 – Таблица «Товары», чтоб получить следующий результат Рисунок 2 – Запрос «мишень».", images: [{src: "test1-img/03.png", caption: "Рисунок 1 – Таблица «Товары»"}, {src: "test1-img/05.png", caption: "Рисунок 2 – Запрос «Мишень»"}], correct: [], fullAnswer: "SELECT НаимТовара AS [Наименование товара], Цена1 AS [Цена закупочная]\nFROM Товары\nWHERE НаимТовара Like \"*мишень*\";" }
+        ]
+    };
+
+    // --- СОСТОЯНИЕ ---
+    let currentQuestions = [];
+    let startTime = 0;
+    let timerInterval = null;
+    let violations = {
+        focusLoss: 0,
+        keyPress: 0,
+        copyPaste: 0,
+        doubleCtrl: 0,
+        mouseLeave: 0,
+        fastAnswers: 0,
+        rightClick: 0
+    };
+    let audioCtx = null;
+    let isTestActive = false;
+
+    // --- УТИЛИТЫ ---
+    function shuffleArray(array) {
+        const a = [...array];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function updateViolationCounter() {
+        const total = Object.values(violations).reduce((a, b) => a + b, 0);
+        const el = document.getElementById('violation-counter');
+        const countEl = document.getElementById('violation-count');
+        el.style.display = 'block';
+        countEl.textContent = total;
+        if (total >= 3) el.classList.add('pulse');
+        if (total >= 5) playSiren();
+    }
+
+    // --- АУДИО ---
+    function initAudio() {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    function playTone(freq, duration, type = 'sine') {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function testSound() {
+        initAudio();
+        playTone(800, 0.2);
+        showToast("Звук работает!");
+    }
+
+    function playWarningYellow() { playTone(800, 0.1); }
+    function playWarningOrange() { 
+        playTone(600, 0.1); 
+        setTimeout(() => playTone(600, 0.1), 150); 
+    }
+    function playWarningRed() {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(800, audioCtx.currentTime + 0.3);
+        gain.gain.value = 0.1;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.3);
+    }
+    function playSiren() {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(1000, audioCtx.currentTime + 0.5);
+        osc.frequency.linearRampToValueAtTime(400, audioCtx.currentTime + 1.0);
+        gain.gain.value = 0.15;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.0);
+    }
+
+    // --- АНТИЧИТ ---
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden && isTestActive) {
+            violations.focusLoss++;
+            updateViolationCounter();
+            playWarningRed();
+            document.getElementById('violation-modal').style.display = 'flex';
+        }
+    });
+
+    window.addEventListener('blur', () => {
+        if (isTestActive) {
+            violations.focusLoss++;
+            updateViolationCounter();
+        }
+    });
+
+    ['copy', 'paste', 'cut'].forEach(evt => {
+        document.addEventListener(evt, (e) => {
+            if (isTestActive) {
+                e.preventDefault();
+                violations.copyPaste++;
+                updateViolationCounter();
+                playWarningRed();
+                showToast("❌ Копирование/вставка запрещены!");
+            }
+        });
+    });
+
+    let ctrlPressTime = 0;
+    document.addEventListener('keydown', (e) => {
+        if (!isTestActive) return;
+        
+        if (e.key === 'F12' || 
+            (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) ||
+            (e.ctrlKey && ['U','S','P'].includes(e.key.toUpperCase())) ||
+            e.key === 'PrintScreen') {
+            e.preventDefault();
+            violations.keyPress++;
+            updateViolationCounter();
+            playWarningRed();
+            showToast("❌ Действие заблокировано!");
+            return;
+        }
+
+        if (e.key === 'Control') {
+            const now = Date.now();
+            if (now - ctrlPressTime < 500) {
+                violations.doubleCtrl++;
+                updateViolationCounter();
+                playWarningOrange();
+                showToast("⚠️ Обнаружен двойной Ctrl!");
+            }
+            ctrlPressTime = now;
+        }
+    });
+
+    document.addEventListener('mouseleave', () => {
+        if (isTestActive) {
+            violations.mouseLeave++;
+            updateViolationCounter();
+            playWarningYellow();
+        }
+    });
+
+    // === ИСПРАВЛЕНО: ЗАЩИТА ОТ ПРАВОЙ КНОПКИ МЫШИ ===
+    document.addEventListener('contextmenu', (e) => {
+        if (!isTestActive) return;
+        e.preventDefault();
+        violations.rightClick++;
+        updateViolationCounter();
+        playWarningRed();
+        showToast("❌ Правая кнопка мыши запрещена!");
+    });
+
+    // === ИСПРАВЛЕНО: ЗАЩИТА ОТ ВЫДЕЛЕНИЯ ТЕКСТА (кроме textarea) ===
+    document.addEventListener('selectstart', (e) => {
+        if (!isTestActive) return;
+        if (e.target.tagName !== 'TEXTAREA') {
+            e.preventDefault();
+        }
+    });
+
+    // === ИСПРАВЛЕНО: ЗАЩИТА ОТ DRAG-AND-DROP ===
+    document.addEventListener('dragstart', (e) => {
+        if (!isTestActive) return;
+        e.preventDefault();
+        violations.copyPaste++;
+        updateViolationCounter();
+        playWarningRed();
+        showToast("❌ Перетаскивание текста запрещено!");
+    });
+
+    function closeViolationModal() {
+        document.getElementById('violation-modal').style.display = 'none';
+    }
+
+    // --- ЛОГИКА ТЕСТА ---
+    function startTest() {
+        const name = document.getElementById('student-name').value.trim();
+        const group = document.getElementById('student-group').value.trim();
+        if (!name || !group) {
+            alert("Заполните ФИО и Группу!");
+            return;
+        }
+
+        initAudio();
+        document.getElementById('display-name').textContent = name;
+        document.getElementById('display-group').textContent = group;
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('test-screen').style.display = 'block';
+        
+        isTestActive = true;
+        startTime = Date.now();
+        timerInterval = setInterval(updateTimer, 1000);
+        
+        prepareQuestions();
+        renderQuestions();
+    }
+
+    function updateTimer() {
+        const diff = Math.floor((Date.now() - startTime) / 1000);
+        const m = Math.floor(diff / 60).toString().padStart(2, '0');
+        const s = (diff % 60).toString().padStart(2, '0');
+        document.getElementById('timer').textContent = `${m}:${s}`;
+    }
+
+    function prepareQuestions() {
+        const processQ = (q, blockName) => {
+            const qCopy = JSON.parse(JSON.stringify(q));
+            qCopy.blockName = blockName;
+            
+            if (qCopy.type === 'radio' || qCopy.type === 'checkbox') {
+                const opts = Object.entries(qCopy.options);
+                const shuffledOpts = shuffleArray(opts);
+                qCopy.options = Object.fromEntries(shuffledOpts);
+            } else if (qCopy.type === 'matching') {
+                qCopy.targets = shuffleArray(qCopy.targets);
+            } else if (qCopy.type === 'ordering') {
+                qCopy.shuffledOptions = shuffleArray([...qCopy.options]);
+            }
+            return qCopy;
+        };
+
+        const basicShuffled = shuffleArray(questionsDB.basic).map(q => processQ(q, 'БАЗОВЫЙ УРОВЕНЬ'));
+        const advancedShuffled = shuffleArray(questionsDB.advanced).map(q => processQ(q, 'ПОВЫШЕННЫЙ УРОВЕНЬ'));
+        const highShuffled = shuffleArray(questionsDB.high).map(q => processQ(q, 'ВОПРОСЫ ПОВЫШЕННОЙ СЛОЖНОСТИ'));
+
+        currentQuestions = [...basicShuffled, ...advancedShuffled, ...highShuffled];
+    }
+
+    function renderQuestions() {
+        const form = document.getElementById('test-form');
+        form.innerHTML = '';
+        let currentBlock = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.blockName !== currentBlock) {
+                currentBlock = q.blockName;
+                const header = document.createElement('div');
+                header.className = 'block-header';
+                header.innerHTML = `<h2>${currentBlock}</h2>`;
+                form.appendChild(header);
+            }
+
+            const block = document.createElement('div');
+            block.className = 'question-block';
+            
+            let html = `<div class="question-text">${q.text}</div>`;
+            
+            // Добавляем картинки ПОСЛЕ текста вопроса
+            if (q.images && q.images.length > 0) {
+                html += `<div class="question-images">`;
+                q.images.forEach(img => {
+                    html += `<div class="image-container">
+                        <img src="${img.src}" class="question-image" alt="${img.caption}">
+                        <div class="image-caption">${img.caption}</div>
+                    </div>`;
+                });
+                html += `</div>`;
+            }
+            
+            if (q.type === 'radio') {
+                html += `<ul class="options-list">`;
+                for (const [key, val] of Object.entries(q.options)) {
+                    html += `<li><label><input type="radio" name="q${q.id}" value="${key}"> ${val}</label></li>`;
+                }
+                html += `</ul>`;
+            } else if (q.type === 'checkbox') {
+                html += `<ul class="options-list">`;
+                for (const [key, val] of Object.entries(q.options)) {
+                    html += `<li><label><input type="checkbox" name="q${q.id}" value="${key}"> ${val}</label></li>`;
+                }
+                html += `</ul>`;
+            } else if (q.type === 'matching') {
+                html += `<div class="matching-container">`;
+                q.items.forEach(item => {
+                    html += `<div class="matching-row"><span>${item.text}</span><select name="q${q.id}_${item.id}"><option value="">Выберите...</option>`;
+                    q.targets.forEach(t => {
+                        html += `<option value="${t.id}">${t.text}</option>`;
+                    });
+                    html += `</select></div>`;
+                });
+                html += `</div>`;
+            } else if (q.type === 'ordering') {
+                html += `<div class="ordering-container">`;
+                q.shuffledOptions.forEach((opt, idx) => {
+                    html += `<div class="ordering-row"><span>Позиция ${idx + 1}:</span><select name="q${q.id}_pos${idx}"><option value="">Выберите этап...</option>`;
+                    q.shuffledOptions.forEach(so => {
+                        html += `<option value="${so}">${so}</option>`;
+                    });
+                    html += `</select></div>`;
+                });
+                html += `</div>`;
+            } else if (q.type === 'text') {
+                html += `<textarea name="q${q.id}" placeholder="Введите ваш ответ здесь..."></textarea>`;
+            }
+            
+            block.innerHTML = html;
+            form.appendChild(block);
+        });
+    }
+
+    // Функция для получения текста правильного ответа
+    function getCorrectAnswerText(q) {
+        if (q.type === 'radio') {
+            const key = q.correct[0];
+            return q.options[key] || "Нет данных";
+        } else if (q.type === 'checkbox') {
+            return q.correct.map(k => q.options[k]).join(', ');
+        } else if (q.type === 'matching') {
+            return Object.entries(q.correct).map(([item, target]) => {
+                const itemText = q.items.find(i => i.id === item)?.text || item;
+                const targetText = q.targets.find(t => t.id === target)?.text || target;
+                return `${itemText} → ${targetText}`;
+            }).join('; ');
+        } else if (q.type === 'ordering') {
+            return q.correct.join(' → ');
+        } else if (q.type === 'text') {
+            return q.fullAnswer || "Нет данных";
+        }
+        return "Нет данных";
+    }
+
+    // Функция для получения текста ответа пользователя
+    function getUserAnswerText(q) {
+        if (q.type === 'radio') {
+            const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+            return selected ? q.options[selected.value] : "Нет ответа";
+        } else if (q.type === 'checkbox') {
+            const selected = Array.from(document.querySelectorAll(`input[name="q${q.id}"]:checked`)).map(el => el.value);
+            return selected.length > 0 ? selected.map(k => q.options[k]).join(', ') : "Нет ответа";
+        } else if (q.type === 'matching') {
+            let ansObj = {};
+            q.items.forEach(item => {
+                const val = document.querySelector(`select[name="q${q.id}_${item.id}"]`)?.value;
+                if (val) {
+                    const targetText = q.targets.find(t => t.id === val)?.text || val;
+                    ansObj[item.text] = targetText;
+                }
+            });
+            return Object.keys(ansObj).length > 0 ? Object.entries(ansObj).map(([k, v]) => `${k} → ${v}`).join('; ') : "Нет ответа";
+        } else if (q.type === 'ordering') {
+            let userOrder = [];
+            for (let i = 0; i < q.correct.length; i++) {
+                const val = document.querySelector(`select[name="q${q.id}_pos${i}"]`)?.value;
+                if (val) userOrder.push(val);
+            }
+            return userOrder.length > 0 ? userOrder.join(' → ') : "Нет ответа";
+        } else if (q.type === 'text') {
+            const val = document.querySelector(`textarea[name="q${q.id}"]`)?.value.trim();
+            return val || "Нет ответа";
+        }
+        return "Нет ответа";
+    }
+
+    function submitTest() {
+        if (!confirm("Вы уверены, что хотите завершить тест?")) return;
+        
+        clearInterval(timerInterval);
+        isTestActive = false;
+        const testDurationSec = Math.floor((Date.now() - startTime) / 1000);
+        
+        let correctCount = 0;
+        const errors = [];
+        const highDifficultyAnswers = [];
+        let radioAnswers = [];
+        const totalGraded = 26; // Вопросы 1-26 оцениваются автоматически
+
+        currentQuestions.forEach((q, index) => {
+            let isCorrect = false;
+
+            // Вопросы с текстовыми ответами (27-30) и повышенной сложности (35-40) не оцениваются автоматически
+            if ((q.id >= 27 && q.id <= 30) || q.id >= 35) {
+                const val = document.querySelector(`textarea[name="q${q.id}"]`)?.value.trim();
+                highDifficultyAnswers.push({ 
+                    num: index + 1, 
+                    text: q.text, 
+                    userAnswer: val || "Нет ответа",
+                    fullAnswer: q.fullAnswer || "Эталонный ответ не задан"
+                });
+                return;
+            }
+
+            if (q.type === 'radio') {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                if (selected) {
+                    const userAns = selected.value;
+                    radioAnswers.push(userAns);
+                    isCorrect = q.correct.includes(userAns);
+                }
+            } else if (q.type === 'checkbox') {
+                const selected = Array.from(document.querySelectorAll(`input[name="q${q.id}"]:checked`)).map(el => el.value).sort();
+                isCorrect = JSON.stringify(selected) === JSON.stringify(q.correct.sort());
+            } else if (q.type === 'matching') {
+                let matches = 0;
+                let total = Object.keys(q.correct).length;
+                Object.keys(q.correct).forEach(key => {
+                    const val = document.querySelector(`select[name="q${q.id}_${key}"]`)?.value;
+                    if (val === q.correct[key]) matches++;
+                });
+                isCorrect = matches === total;
+            } else if (q.type === 'ordering') {
+                let userOrder = [];
+                let allFilled = true;
+                for (let i = 0; i < q.correct.length; i++) {
+                    const val = document.querySelector(`select[name="q${q.id}_pos${i}"]`)?.value;
+                    if (!val) allFilled = false;
+                    userOrder.push(val);
+                }
+                isCorrect = allFilled && JSON.stringify(userOrder) === JSON.stringify(q.correct);
+            }
+
+            if (isCorrect) {
+                correctCount++;
+            } else {
+                errors.push({ 
+                    num: index + 1, 
+                    text: q.text, 
+                    userAnswer: getUserAnswerText(q),
+                    correctAnswer: getCorrectAnswerText(q)
+                });
+            }
+        });
+
+        // Анализ паттерна ответов
+        let patternSuspicious = false;
+        let patternPct = 0;
+        if (radioAnswers.length > 0) {
+            const counts = {};
+            radioAnswers.forEach(a => counts[a] = (counts[a] || 0) + 1);
+            const maxCount = Math.max(...Object.values(counts));
+            patternPct = (maxCount / radioAnswers.length) * 100;
+            if (patternPct > 70) patternSuspicious = true;
+        }
+
+        const percentage = Math.round((correctCount / totalGraded) * 100);
+
+        // === ИСПРАВЛЕНО: РАСЧЕТ ОЦЕНКИ ===
+        let grade = 2;
+        if (percentage >= 80) grade = 5;
+        else if (percentage >= 65) grade = 4;
+        else if (percentage >= 50) grade = 3;
+
+        const name = document.getElementById('student-name').value.trim();
+        const group = document.getElementById('student-group').value.trim();
+        const totalViolations = Object.values(violations).reduce((a, b) => a + b, 0);
+
+        // Отображение результатов
+        document.getElementById('test-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        
+        document.getElementById('res-name').textContent = name.split(' ')[0].toUpperCase();
+        document.getElementById('res-score').textContent = `Правильных ответов: ${correctCount} из ${totalGraded}`;
+        
+        document.getElementById('res-percent').textContent = percentage;
+        const m = Math.floor(testDurationSec / 60).toString().padStart(2, '0');
+        const s = (testDurationSec % 60).toString().padStart(2, '0');
+        document.getElementById('res-time').textContent = `${m}:${s}`;
+
+        // Таблица вопросов для ручной проверки (ПЕРЕД работой над ошибками)
+        const highDiffContainer = document.getElementById('res-high-diff');
+        if (highDifficultyAnswers.length > 0) {
+            let html = '<h3>Вопросы для ручной проверки преподавателем</h3>';
+            html += '<table class="results-table"><thead><tr><th style="width: 35%;">Вопрос</th><th style="width: 30%;">Ваш ответ</th><th style="width: 35%;">Эталонный ответ</th></tr></thead><tbody>';
+            highDifficultyAnswers.forEach(h => {
+                html += `<tr>
+                    <td>${h.text}</td>
+                    <td>${h.userAnswer}</td>
+                    <td class="answer-correct">${h.fullAnswer}</td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            highDiffContainer.innerHTML = html;
+            highDiffContainer.style.display = 'block';
+        } else {
+            highDiffContainer.style.display = 'none';
+        }
+
+        // Таблица ошибок (без обрезания длинных ответов)
+        const errContainer = document.getElementById('res-errors-container');
+        if (errors.length === 0) {
+            errContainer.innerHTML = '<div style="color:var(--success); font-size:1.2em; font-weight:bold; text-align:center; margin-bottom: 20px;">Ошибок в оцениваемой части нет! Отличная работа.</div>';
+        } else {
+            let tableHtml = '<h3 style="text-align:center;">Работа над ошибками</h3>';
+            tableHtml += '<table class="results-table"><thead><tr><th style="width: 40%;">Вопрос</th><th style="width: 30%;">Ваш ответ</th><th style="width: 30%;">Правильный ответ</th></tr></thead><tbody>';
+            errors.forEach(e => {
+                tableHtml += `<tr>
+                    <td>${e.text}</td>
+                    <td class="answer-wrong">${e.userAnswer}</td>
+                    <td class="answer-correct">${e.correctAnswer}</td>
+                </tr>`;
+            });
+            tableHtml += '</tbody></table>';
+            errContainer.innerHTML = tableHtml;
+        }
+
+        // Отправка на сервер (ИСПРАВЛЕНО: total + grade + right_click_count)
+        sendResultToServer({
+            test_id: TEST_ID,
+            test_name: TEST_NAME,
+            name: name,
+            group: group,
+            score: correctCount,
+            total: totalGraded,
+            percentage: percentage,
+            grade: grade,
+            errors_count: errors.length,
+            test_duration: testDurationSec,
+            focus_loss_count: violations.focusLoss,
+            key_press_count: violations.keyPress,
+            copy_paste_count: violations.copyPaste,
+            double_ctrl_count: violations.doubleCtrl,
+            mouse_leave_count: violations.mouseLeave,
+            fast_answers_count: violations.fastAnswers,
+            right_click_count: violations.rightClick,
+            answer_pattern: radioAnswers.length > 0 ? "detected" : "none",
+            answer_pattern_percentage: patternPct,
+            answer_pattern_suspicious: patternSuspicious,
+            total_violations: totalViolations,
+            high_difficulty_answers: highDifficultyAnswers.map(h => ({ q_num: h.num, answer: h.userAnswer }))
+        });
+    }
+
+    // === ИСПРАВЛЕНО: обработка ответа сервера с выводом ошибки ===
+    function sendResultToServer(data) {
+        fetch(SERVER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.status === 'success') {
+                console.log("✅ Результат успешно сохранен на сервере");
+            } else {
+                console.error("❌ Ошибка сервера:", result.message);
+                alert("Ошибка сохранения: " + result.message);
+            }
+        })
+        .catch(err => {
+            console.error("❌ Ошибка сети:", err);
+            alert("Ошибка сети при сохранении результата.");
+        });
+    }
+</script>
+</body>
+</html>

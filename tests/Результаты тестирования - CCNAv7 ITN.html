@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<!-- saved from url=(0067)https://dt.sielom.ru/-TESTS/Test-CCNAv7-ITN/view_results.php?test=1 -->
+<html lang="ru"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>Результаты тестирования - CCNAv7 ITN</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; margin: 0; }
+        .container { max-width: 1800px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #0056b3; text-align: center; margin-top: 0; }
+        .login-form { max-width: 400px; margin: 50px auto; text-align: center; }
+        .login-form input { padding: 12px; width: 100%; margin: 10px 0; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; }
+        .login-form button { padding: 12px 30px; background: #0056b3; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        .login-form button:hover { background: #004494; }
+        .error { color: #dc3545; text-align: center; font-weight: bold; padding: 10px; background: #f8d7da; border-radius: 4px; margin: 10px 0; }
+        .security-info { color: #666; font-size: 0.85em; margin-top: 15px; }
+        .logout-btn { float: right; padding: 8px 16px; background: #6c757d; color: #fff; text-decoration: none; border-radius: 4px; font-size: 0.9em; }
+        .logout-btn:hover { background: #5a6268; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 20px 0; }
+        .stat-card { background: #e3f2fd; padding: 12px; border-radius: 6px; text-align: center; }
+        .stat-value { font-size: 1.8em; font-weight: bold; color: #0056b3; }
+        .stat-label { color: #666; font-size: 0.8em; margin-top: 3px; }
+        .stat-card.warning { background: #fff3cd; }
+        .stat-card.warning .stat-value { color: #856404; }
+        .stat-card.danger { background: #f8d7da; }
+        .stat-card.danger .stat-value { color: #721c24; }
+        .stat-card.success { background: #d4edda; }
+        .stat-card.success .stat-value { color: #155724; }
+        .controls { margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .controls button { padding: 8px 16px; background: #28a745; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 0.95em; }
+        .controls button:hover { opacity: 0.9; }
+        .controls button.danger { background: #dc3545; }
+        .controls button.warning { background: #ffc107; color: #333; }
+        .controls button.active { box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.3); }
+        .filter-input { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95em; min-width: 180px; }
+        .table-wrapper { overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+        th { background: #0056b3; color: #fff; padding: 8px 6px; text-align: left; position: sticky; top: 0; white-space: nowrap; font-size: 0.9em; }
+        td { padding: 6px; border-bottom: 1px solid #eee; }
+        tr:hover { background: #f8f9fa; }
+        tr.suspicious { background: #fff3cd !important; border-left: 4px solid #ffc107; }
+        .grade-5, .grade-4 { color: #28a745; font-weight: bold; font-size: 1.2em; }
+        .grade-3 { color: #ffc107; font-weight: bold; font-size: 1.2em; }
+        .grade-2 { color: #dc3545; font-weight: bold; font-size: 1.2em; }
+        .violation-badge { display: inline-block; padding: 2px 7px; border-radius: 10px; font-weight: bold; font-size: 0.85em; min-width: 25px; text-align: center; }
+        .violation-badge.zero { background: #d4edda; color: #155724; }
+        .violation-badge.low { background: #fff3cd; color: #856404; }
+        .violation-badge.high { background: #f8d7da; color: #721c24; }
+        .suspicious-icon { color: #dc3545; font-size: 1.2em; margin-left: 5px; }
+        .reasons-cell { font-size: 0.85em; color: #856404; max-width: 280px; }
+        .no-data { text-align: center; color: #666; padding: 40px; font-size: 1.1em; }
+        .legend { background: #f8f9fa; padding: 15px; border-radius: 6px; margin: 20px 0; font-size: 0.85em; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .legend-color { width: 18px; height: 18px; border-radius: 4px; }
+        .section-title { color: #0056b3; font-size: 1.2em; margin: 25px 0 10px 0; padding-bottom: 5px; border-bottom: 2px solid #e3f2fd; }
+        .pattern-cell { font-family: monospace; font-weight: bold; }
+        .pattern-cell.suspicious { color: #dc3545; background: #f8d7da; padding: 2px 6px; border-radius: 4px; }
+        .tests-tabs { margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap; border-bottom: 2px solid #e3f2fd; padding-bottom: 10px; align-items: center; }
+        .tests-tabs strong { color: #0056b3; align-self: center; }
+        .test-tab { padding: 8px 16px; text-decoration: none; border-radius: 6px; background: #e3f2fd; color: #0056b3; font-weight: normal; transition: all 0.2s; }
+        .test-tab:hover { background: #0077cc; color: #fff; }
+        .test-tab.active { background: #0056b3; color: #fff; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Результаты тестирования CCNAv7 ITN</h1>
+        
+                                
+            <a href="https://dt.sielom.ru/-TESTS/Test-CCNAv7-ITN/view_results.php?logout=1" class="logout-btn">🚪 Выйти</a>
+            
+            <!-- ВКЛАДКИ ТЕСТОВ -->
+                        <div class="tests-tabs">
+                <strong>📚 Тест:</strong>
+                                    <a href="https://dt.sielom.ru/-TESTS/Test-CCNAv7-ITN/view_results.php?test=1" class="test-tab active">
+                        Модуль 1: Современные сетевые технологии                    </a>
+                                    <a href="https://dt.sielom.ru/-TESTS/Test-CCNAv7-ITN/view_results.php?test=2" class="test-tab ">
+                        Модуль 2: Базовая конфигурация коммутатора                    </a>
+                            </div>
+                        
+            <div class="section-title">📈 Общая статистика</div>
+            <div class="stats">
+                <div class="stat-card"><div class="stat-value">4</div><div class="stat-label">👥 Всего студентов</div></div>
+                <div class="stat-card"><div class="stat-value">51.3%</div><div class="stat-label">📈 Средний балл</div></div>
+                <div class="stat-card"><div class="stat-value">2.4 мин</div><div class="stat-label">⏱️ Среднее время</div></div>
+                <div class="stat-card success"><div class="stat-value" style="color:#28a745">0</div><div class="stat-label">Оценок «5»</div></div>
+                <div class="stat-card success"><div class="stat-value" style="color:#28a745">2</div><div class="stat-label">Оценок «4»</div></div>
+                <div class="stat-card warning"><div class="stat-value" style="color:#ffc107">1</div><div class="stat-label">Оценок «3»</div></div>
+                <div class="stat-card danger"><div class="stat-value" style="color:#dc3545">1</div><div class="stat-label">Оценок «2»</div></div>
+            </div>
+            
+            <div class="section-title">🚨 Статистика нарушений</div>
+            <div class="stats">
+                <div class="stat-card danger"><div class="stat-value">4</div><div class="stat-label">⚠️ Подозрительных</div></div>
+                <div class="stat-card warning"><div class="stat-value">57</div><div class="stat-label">🚨 Всего нарушений</div></div>
+                <div class="stat-card "><div class="stat-value">0</div><div class="stat-label">🔄 Переключений</div></div>
+                <div class="stat-card "><div class="stat-value">0</div><div class="stat-label">⌨️ Нажатий клавиш</div></div>
+                <div class="stat-card "><div class="stat-value">0</div><div class="stat-label">📋 Копирований</div></div>
+                <div class="stat-card "><div class="stat-value">0</div><div class="stat-label">🌐 Двойной Ctrl</div></div>
+                <div class="stat-card "><div class="stat-value">0</div><div class="stat-label">🖱️ Мышь за окном</div></div>
+                <div class="stat-card warning"><div class="stat-value">57</div><div class="stat-label">⚡ Быстрых ответов</div></div>
+            </div>
+            
+            <div class="legend">
+                <strong>Легенда:</strong>
+                <div class="legend-item"><div class="legend-color" style="background:#fff3cd; border:1px solid #ffc107;"></div><span>Подозрительный студент</span></div>
+                <div class="legend-item"><span class="violation-badge zero">0</span><span>Нарушений нет</span></div>
+                <div class="legend-item"><span class="violation-badge low">1-2</span><span>Незначительные</span></div>
+                <div class="legend-item"><span class="violation-badge high">3+</span><span>Множественные</span></div>
+            </div>
+            
+            <div class="controls">
+                <input type="text" id="filterGroup" class="filter-input" placeholder="🔍 Фильтр по группе..." onkeyup="filterTable()">
+                <input type="text" id="filterName" class="filter-input" placeholder="🔍 Фильтр по ФИО..." onkeyup="filterTable()">
+                <button id="btnSuspicious" class="warning" onclick="toggleSuspicious()">⚠️ Только подозрительные</button>
+                <button onclick="exportCSV()">📥 Экспорт в CSV</button>
+                <button onclick="window.print()">🖨 Печать</button>
+                <button class="danger" onclick="clearResults()">🗑 Очистить всё</button>
+            </div>
+            
+            <div class="table-wrapper">
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>№</th><th>Дата</th><th>Фамилия И.О.</th><th>Группа</th><th>Результат</th>
+                            <th>Оценка</th><th>Время</th><th>🔄 Вклад.</th><th>⌨️ Клавиш</th>
+                            <th>📋 Copy</th><th>🌐 Ctrl×2</th><th>🖱️ Мышь</th><th>⚡ Быстр.</th>
+                            <th>🔤 Паттерн</th><th>🚨 Итого</th><th>Причины</th><th>IP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                                                <tr class="suspicious" data-suspicious="1">
+                            <td>1</td>
+                            <td style="white-space:nowrap; font-size:0.85em">2026-10-09 11:20:43</td>
+                            <td>заманов эльджан дильгам оглы<span class="suspicious-icon">⚠️</span></td>
+                            <td><strong>са 25</strong></td>
+                            <td>28/40 (70%)</td>
+                            <td class="grade-4">4</td>
+                            <td>4.5 мин</td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge high">9</span></td>
+                            <td class="pattern-cell ">C (29%)</td>
+                            <td><span class="violation-badge high">9</span></td>
+                            <td class="reasons-cell">быстрых ответов</td>
+                            <td style="font-size:0.8em">90.151.76.114</td>
+                        </tr>
+                                                <tr class="suspicious" data-suspicious="1">
+                            <td>2</td>
+                            <td style="white-space:nowrap; font-size:0.85em">2026-10-09 11:13:06</td>
+                            <td>заманов эльджан дильгам оглы<span class="suspicious-icon">⚠️</span></td>
+                            <td><strong>са 25</strong></td>
+                            <td>26/40 (65%)</td>
+                            <td class="grade-4">4</td>
+                            <td>1.5 мин</td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge high">29</span></td>
+                            <td class="pattern-cell ">A (39%)</td>
+                            <td><span class="violation-badge high">29</span></td>
+                            <td class="reasons-cell">быстрое прохождение, быстрых ответов</td>
+                            <td style="font-size:0.8em">90.151.76.114</td>
+                        </tr>
+                                                <tr class="suspicious" data-suspicious="1">
+                            <td>3</td>
+                            <td style="white-space:nowrap; font-size:0.85em">2026-10-09 11:01:02</td>
+                            <td>заманов эльджан дильгам оглы<span class="suspicious-icon">⚠️</span></td>
+                            <td><strong>са 25</strong></td>
+                            <td>24/40 (60%)</td>
+                            <td class="grade-3">3</td>
+                            <td>2.2 мин</td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge high">19</span></td>
+                            <td class="pattern-cell ">B (32%)</td>
+                            <td><span class="violation-badge high">19</span></td>
+                            <td class="reasons-cell">быстрых ответов</td>
+                            <td style="font-size:0.8em">90.151.76.114</td>
+                        </tr>
+                                                <tr class="suspicious" data-suspicious="1">
+                            <td>4</td>
+                            <td style="white-space:nowrap; font-size:0.85em">2026-10-08 16:17:00</td>
+                            <td>ййй<span class="suspicious-icon">⚠️</span></td>
+                            <td><strong>ййй</strong></td>
+                            <td>4/40 (10%)</td>
+                            <td class="grade-2">2</td>
+                            <td>1.3 мин</td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td class="pattern-cell ">A (60%)</td>
+                            <td><span class="violation-badge zero">0</span></td>
+                            <td class="reasons-cell">быстрое прохождение</td>
+                            <td style="font-size:0.8em">90.151.76.114</td>
+                        </tr>
+                                            </tbody>
+                </table>
+            </div>
+            
+                        
+            <script>
+                const CSRF_TOKEN = '0f976deacbdc4902983075b9b01f21c577bc84fa4ae930e70c07d807aa405760';
+                let showOnlySuspicious = false;
+                
+                function filterTable() {
+                    const group = document.getElementById('filterGroup').value.toLowerCase();
+                    const name = document.getElementById('filterName').value.toLowerCase();
+                    const rows = document.querySelectorAll('#resultsTable tbody tr');
+                    rows.forEach(row => {
+                        const rowGroup = row.cells[3].textContent.toLowerCase();
+                        const rowName = row.cells[2].textContent.toLowerCase();
+                        const isSuspicious = row.dataset.suspicious === '1';
+                        const matchesFilters = rowGroup.includes(group) && rowName.includes(name);
+                        const matchesSuspicious = !showOnlySuspicious || isSuspicious;
+                        row.style.display = (matchesFilters && matchesSuspicious) ? '' : 'none';
+                    });
+                }
+                
+                function toggleSuspicious() {
+                    showOnlySuspicious = !showOnlySuspicious;
+                    const btn = document.getElementById('btnSuspicious');
+                    btn.classList.toggle('active', showOnlySuspicious);
+                    btn.textContent = showOnlySuspicious ? '✅ Показать всех' : '⚠️ Только подозрительные';
+                    filterTable();
+                }
+                
+                function exportCSV() {
+                    const table = document.getElementById('resultsTable');
+                    let csv = [];
+                    for (let row of table.rows) {
+                        if (row.style.display === 'none') continue;
+                        let rowData = [];
+                        for (let cell of row.cells) {
+                            rowData.push('"' + cell.textContent.replace(/"/g, '""').trim() + '"');
+                        }
+                        csv.push(rowData.join(';'));
+                    }
+                    const blob = new Blob(['\uFEFF' + csv.join('\n')], {type: 'text/csv;charset=utf-8;'});
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = 'results_' + new Date().toISOString().slice(0,10) + '.csv';
+                    link.click();
+                }
+                
+                function clearResults() {
+                    if (!confirm('Удалить ВСЕ результаты текущего теста? Это действие необратимо!')) return;
+                    fetch('save_result.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-Token': CSRF_TOKEN
+                        },
+                        body: JSON.stringify({ action: 'clear' })
+                    })
+                    .then(r => r.json())
+                    .then(d => { 
+                        if (d.status === 'success') location.reload(); 
+                        else alert('Ошибка: ' + d.message);
+                    })
+                    .catch(err => alert('Ошибка сети: ' + err));
+                }
+            </script>
+            </div>
+
+<a id="bottomBar" style="position: fixed; bottom: -40px; left: 0px; z-index: 9999; transform: translateX(-50%); background-color: transparent; border-radius: 5px 5px 0px 0px; opacity: 0.3; padding: 5px; transition: 0.3s; cursor: pointer; max-height: 100px; max-width: 45px;"><img src="chrome-extension://kobncfkmjelbefaoohoblamnbackjggk/icon/icon_32.png" style="width: 32px; height: 32px;"></a></body></html>
