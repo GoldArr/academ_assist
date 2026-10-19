@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Academic Assistant",
+  "version": "1.0",
+  "description": "Инструмент аудита клиентской части тестирования",
+  "permissions": ["scripting"],
+  "host_permissions": [
+    "https://dt.sielom.ru/*",
+    "http://dt.sielom.ru/*",
+    "file:///*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://dt.sielom.ru/*",
+        "http://dt.sielom.ru/*",
+        "file:///*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "world": "MAIN"
+    }
+  ]
+}
